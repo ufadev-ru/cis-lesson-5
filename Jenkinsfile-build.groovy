@@ -2,6 +2,15 @@ pipeline {
     agent any
 
     stages {
+        stage('Login') {
+            steps {
+               withCredentials([string(credentialsId: 'github_token', variable: 'TOKEN')]) {
+                   sh """
+                  echo $TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+                  """
+                 }
+            }
+        }
         stage('Build') {
             steps {
                echo "===== Build image frontend-core ====="
