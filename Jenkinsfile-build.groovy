@@ -3,24 +3,21 @@ pipeline {
 
     stages {
         stage('Build') {
-            steps {
-                steps {
-                    echo "===== Build image frontend-core ====="
-                    sh """
-                    docker build -t $REGISTRY/$OCP_NAMESPACE/$OCP_APP_NAME-frontend-core:$APP_VERSION \
-                                 --no-cache \
-                                 --target final \
-                                 --build-arg NODEJS__BASE_IMAGE=$RH_REGISTRY/ubi8/nodejs-18:latest \
-                                 --build-arg NGINX__BASE_IMAGE=$RH_REGISTRY/ubi8/nginx-122:latest \
-                                 --build-arg FRONTEND__NPM_EXTERNAL_DSO=$REPO_NODEJS \
-                                 --build-arg APP_VERSION=$APP_VERSION \
-                                 -f $DOCKERFILE_PATH \
-                                 .
-                    """
+            steps {echo "===== Build image frontend-core ====="
+               sh """
+               docker build -t $REGISTRY/$OCP_NAMESPACE/$OCP_APP_NAME-frontend-core:$APP_VERSION \
+                            --no-cache \
+                            --target final \
+                            --build-arg NODEJS__BASE_IMAGE=$RH_REGISTRY/ubi8/nodejs-18:latest \
+                            --build-arg NGINX__BASE_IMAGE=$RH_REGISTRY/ubi8/nginx-122:latest \
+                            --build-arg FRONTEND__NPM_EXTERNAL_DSO=$REPO_NODEJS \
+                            --build-arg APP_VERSION=$APP_VERSION \
+                            -f $DOCKERFILE_PATH \
+                            .
+               """
 
-                    echo "===== push image frontend-core ====="
-                    doDocker("push", ["registry": "$REGISTRY", "registry_path": "$OCP_NAMESPACE", "image_name": "$OCP_APP_NAME-frontend-core", "image_tag": "$APP_VERSION"])
-                }
+               echo "===== push image frontend-core ====="
+               doDocker("push", ["registry": "$REGISTRY", "registry_path": "$OCP_NAMESPACE", "image_name": "$OCP_APP_NAME-frontend-core", "image_tag": "$APP_VERSION"])
             }
         }
         stage('Test') {
