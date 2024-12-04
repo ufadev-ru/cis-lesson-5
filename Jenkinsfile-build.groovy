@@ -3,7 +3,8 @@ pipeline {
 
     stages {
         stage('Build') {
-            steps {echo "===== Build image frontend-core ====="
+            steps {
+               echo "===== Build image frontend-core ====="
                sh """
                docker build -t $REGISTRY/$OCP_NAMESPACE/$OCP_APP_NAME-frontend-core:$APP_VERSION \
                             --no-cache \
@@ -17,7 +18,6 @@ pipeline {
                """
 
                echo "===== push image frontend-core ====="
-               doDocker("push", ["registry": "$REGISTRY", "registry_path": "$OCP_NAMESPACE", "image_name": "$OCP_APP_NAME-frontend-core", "image_tag": "$APP_VERSION"])
             }
         }
         stage('Test') {
